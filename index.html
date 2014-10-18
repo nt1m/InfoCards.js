@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>InfoCards.js</title>
+    <link rel="stylesheet" href="css/infocards.css"/>
+    <script src="js/infocards.js"></script>
+</head>
+<body>
+    <h1>Infocards.js : The nice way to get information</h1>
+    <h2>Description</h2>
+    <p>infocards.js is a customizable JS plugin which allows you to get related information about a specified query. It is powered by the awesome DuckDuckGo api, which respects your privacy.</p>
+    <h2>Usage</h2>
+    <pre>new InfoCard(options)</pre>
+    <h3>options</h3>
+    <h4>query</h4>
+    <p>The query you wish to get information about. <b>Required</b></p>
+    <h4>container</h4>
+    <p>The DOM element where you wish to insert the info card. <b>Required</b></p>
+    <h2>Example</h2>
+    <p>
+        <input type="text" placeholder="Find information about..." id="demo-input"></input>
+    </p>
+    <div id="demo-result"></div>
+    <pre><script style="display:block;">
+window.onload = function() {
+    var infocard = null;
+    document.querySelector("#demo-input").addEventListener("change",function() {
+        if(infocard != null) {
+            infocard.destroy();
+        }
+        infocard = new InfoCard({
+            query: this.value,
+            container: document.querySelector("#demo-result")
+        });
+    }, false);
+};
+    </script></pre>
+</body>
+</html>
