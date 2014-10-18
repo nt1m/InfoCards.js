@@ -1,0 +1,109 @@
+.InfoCard-card {
+	font-family: Arial, sans-serif;
+	overflow: auto;
+}
+.InfoCard-text {
+	overflow: auto;
+}
+.InfoCard-entity {
+	color: #888;
+	text-transform: capitalize;
+}
+.InfoCard-description {
+	text-align: justify;
+}
+.InfoCard-link-icon {
+	margin-right: 10px;
+	width: 16px;
+	height: 16px;
+}
+.InfoCard-title {
+	font-size: 1.5em;
+}
+.InfoCard-image-container {
+	float: left;
+}
+.InfoCard-image {
+	margin-right: 10px;
+	max-width: 250px;
+	vertical-align: middle;
+}
+.InfoCard-list {
+	float: right;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.InfoCard-list > li{
+	margin: 5px 0;
+	padding: 0;
+	overflow: auto;
+}
+
+.InfoCard-list > li label {
+	font-weight: bold;
+	margin-right: 20px;
+}
+
+.InfoCard-list > li span {
+	float: right;
+}
+
+/* Category styling */
+.InfoCard-tabs {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.InfoCard-tabs > li {
+	display: inline-block;
+	padding: 5px;
+	margin-right: 10px;
+	cursor: pointer;
+}
+
+.InfoCard-tabs > li:not(.InfoCard-selected) {
+	color: #888;
+}
+.InfoCard-tabs > li sup {
+	margin-left: 2px;
+}
+.InfoCard-selected {
+	font-weight: bold;
+}
+
+.InfoCard-category {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	white-space: nowrap;
+	overflow-y: hidden;
+	overflow-x: auto;
+}
+.InfoCard-category > li {
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	width: 250px;
+	height: 200px;
+	border: 1px solid gray;
+	overflow: auto;
+	margin: 10px;
+	padding: 5px;
+}
+.InfoCard-category > li img {
+	max-width: 50px;
+	float: right;
+	margin-left: 10px;
+	margin-bottom: 5px;
+}
+.InfoCard-category > li h2 {
+	font-size: 1em;
+	white-space: normal;
+}
+.InfoCard-category > li > p {
+	white-space: normal;
+	text-align: justify;
+}
