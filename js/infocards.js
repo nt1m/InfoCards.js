@@ -248,7 +248,6 @@ function InfoCard(options) {
 		}
 	}
 	this.destroy = function() {
-		_.container.removeChild(_.card);
 		_.container.innerHTML = "";
 	}
 	this.createCard();
