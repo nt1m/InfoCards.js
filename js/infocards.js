@@ -35,7 +35,7 @@ function InfoCard(options) {
 	this.hasTabs = false;
 	this.onEmptyCallback = function() {
 		if(options.hasOwnProperty("onEmpty")) {
-			options.onEmpty().bind(_.container);
+			options.onEmpty(_.container);
 		}
 	}
 	this.parseTopic = function(data, container) {
