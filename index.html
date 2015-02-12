@@ -30,7 +30,10 @@ window.onload = function() {
         }
         infocard = new InfoCard({
             query: this.value,
-            container: document.querySelector("#demo-result")
+            container: document.querySelector("#demo-result"),
+            onEmpty: function(container) {
+                container.innerHTML="No results found."
+            }
         });
     }, false);
 };
