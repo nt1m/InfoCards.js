@@ -33,51 +33,55 @@ function InfoCard(options) {
 		}
 	}
 	this.hasTabs = false;
-	this.parseTopic = function(data, container) {
-		if(!data.hasOwnProperty("Topics")) {
-			var item = document.createElement("li");
-			container.appendChild(item);
-			var title = document.createElement("h2");
-			title.innerHTML = decodeURIComponent(data.FirstURL.replace("https://duckduckgo.com/","")
-												.replace(/_/g," "));
-			item.appendChild(title);
-			if(data.hasOwnProperty("Icon") && data.Icon.URL != "") {
-				var image = document.createElement("img");
-				image.src = data.Icon.URL;
-				item.appendChild(image);
-			}
-			var description = document.createElement("p");
-			description.innerHTML = data.Result;
-			item.appendChild(description);
-
-			var unwantedlink = description.querySelector("a");
-			description.removeChild(unwantedlink);
+	this.onEmptyCallback = function() {
+		if(options.hasOwnProperty("onEmpty")) {
+			_.onEmptyCallback();
+			options.onEmpty().bind(_.container);
 		}
+	}
+	this.parseTopic = function(data, container) {
+		if(data.hasOwnProperty("Topics")) {
+			return;
+		}
+		var item = document.createElement("li");
+		container.appendChild(item);
+		var title = document.createElement("h2");
+		title.innerHTML = decodeURIComponent(data.FirstURL.replace("https://duckduckgo.com/","")
+											.replace(/_/g," "));
+		item.appendChild(title);
+		if(data.hasOwnProperty("Icon") && data.Icon.URL != "") {
+			var image = document.createElement("img");
+			image.src = data.Icon.URL;
+			item.appendChild(image);
+		}
+		var description = document.createElement("p");
+		description.innerHTML = data.Result;
+		item.appendChild(description);
+
+		var unwantedlink = description.querySelector("a");
+		description.removeChild(unwantedlink);
 	}
 	this.createCard = function() {
 		_.getJSONData(function(data) {
 			_.container.classList.add("InfoCard-container");
-			if(data.Heading != "") {
-				_.card = document.createElement("div");
-				_.container.appendChild(_.card);
-				_.card.classList.add("InfoCard-card");
-				var infos = document.createElement("div");
-				infos.classList.add("InfoCard-text");
-				_.card.appendChild(infos);
-				var header = document.createElement("h1");
-				infos.appendChild(header);
-				header.classList.add("InfoCard-title");
-				header.innerHTML = data.Heading;
-			}
-			else {
-				if(options.hasOwnProperty("onEmpty")) {
-					options.onEmpty().bind(_.container)
-				}
+
+			if(data.Heading == "" || data.Type == "") {
+				_.onEmptyCallback();
 				return;
 			}
-			if(data.Type !== "") {
-				_.card.classList.add("InfoCard-type-"+data.Type.toLowerCase())
-			}
+			_.card = document.createElement("div");
+			_.container.appendChild(_.card);
+			_.card.classList.add("InfoCard-card");
+			var infos = document.createElement("div");
+			infos.classList.add("InfoCard-text");
+			_.card.appendChild(infos);
+			var header = document.createElement("h1");
+			infos.appendChild(header);
+			header.classList.add("InfoCard-title");
+			header.innerHTML = data.Heading;
+
+			_.card.classList.add("InfoCard-type-"+data.Type.toLowerCase());
+
 			switch(data.Type) {
 				case "A":
 					if(data.Image || data.Image != "") {
@@ -140,77 +144,77 @@ function InfoCard(options) {
 
 				break;
 				case "D":
-					if(data.hasOwnProperty("RelatedTopics") && data.RelatedTopics != "") {
-						_.hasTabs = true;
-						var tabs = document.createElement("ul");
-						tabs.classList.add("InfoCard-tabs");
-						infos.appendChild(tabs);
-
-						var toptab = document.createElement("li");
-						toptab.innerHTML = "Top";
-						toptab.dataset.id = "top";
-						tabs.appendChild(toptab);
-
-						var categorycard = document.createElement("ul");
-						categorycard.className = "InfoCard-category InfoCard-tab-content";
-						categorycard.dataset.id = "top";
-						infos.appendChild(categorycard);
-
-						data.RelatedTopics.forEach(function(value) {
-							if(value.hasOwnProperty("Topics")) {
-								var tab = document.createElement("li");
-								tab.innerHTML = value.Name;
-								tab.dataset.id = value.Name;
-								tabs.appendChild(tab);
-
-								var tabcount = document.createElement("sup");
-								tabcount.innerHTML = value.Topics.length;
-								tab.appendChild(tabcount);
-
-								var tabcontent = document.createElement("ul");
-								tabcontent.className = "InfoCard-category InfoCard-tab-content";
-								tabcontent.dataset.id = value.Name;
-								infos.appendChild(tabcontent);
-
-								value.Topics.forEach(function(val) {
-									_.parseTopic(val, tabcontent)
-								});
-							}
-							else {
-								_.parseTopic(value, categorycard);
-							}
-						});
-						var toptabcount = document.createElement("sup");
-						toptabcount.innerHTML = categorycard.querySelectorAll("li").length;
-						toptab.appendChild(toptabcount);
+					if(!data.hasOwnProperty("RelatedTopics") && data.RelatedTopics == "") {
+						_.onEmptyCallback();
+						return;
 					}
+					_.hasTabs = true;
+					var tabs = document.createElement("ul");
+					tabs.classList.add("InfoCard-tabs");
+					infos.appendChild(tabs);
+
+					var toptab = document.createElement("li");
+					toptab.innerHTML = "Top";
+					toptab.dataset.id = "top";
+					tabs.appendChild(toptab);
+
+					var categorycard = document.createElement("ul");
+					categorycard.className = "InfoCard-category InfoCard-tab-content";
+					categorycard.dataset.id = "top";
+					infos.appendChild(categorycard);
+
+					data.RelatedTopics.forEach(function(value) {
+						if(value.hasOwnProperty("Topics")) {
+							var tab = document.createElement("li");
+							tab.innerHTML = value.Name;
+							tab.dataset.id = value.Name;
+							tabs.appendChild(tab);
+
+							var tabcount = document.createElement("sup");
+							tabcount.innerHTML = value.Topics.length;
+							tab.appendChild(tabcount);
+
+							var tabcontent = document.createElement("ul");
+							tabcontent.className = "InfoCard-category InfoCard-tab-content";
+							tabcontent.dataset.id = value.Name;
+							infos.appendChild(tabcontent);
+
+							value.Topics.forEach(function(val) {
+								_.parseTopic(val, tabcontent)
+							});
+						}
+						else {
+							_.parseTopic(value, categorycard);
+						}
+					});
+					var toptabcount = document.createElement("sup");
+					toptabcount.innerHTML = categorycard.querySelectorAll("li").length;
+					toptab.appendChild(toptabcount);
 				break;
 				case "C":
-					if(data.hasOwnProperty("RelatedTopics") && data.RelatedTopics != "") {
-						var categorycard = document.createElement("ul");
-						categorycard.classList.add("InfoCard-category");
-						infos.appendChild(categorycard);
-						data.RelatedTopics.forEach(function(value) {
-							_.parseTopic(value, categorycard);
-						});
+					if(!data.hasOwnProperty("RelatedTopics") && data.RelatedTopics == "") {
+						_.onEmptyCallback();
+						return;
 					}
-				break;
-				case "N":
-
 				break;
 				case "E":
-					if(data.Answer != "") {
-						var answer = document.createElement("p");
-						answer.innerHTML = data.Answer;
-						infos.appendChild(answer);
-						if(answer.querySelector("style")) {
-							answer.querySelector("style").remove();
-						}
-						if(answer.querySelector("script")) {
-							answer.querySelector("script").remove();
-						}
-						answer.innerHTML = answer.textContent;
+					if(data.Answer == "") {
+						_.onEmptyCallback();
+						return;
 					}
+					var answer = document.createElement("p");
+					answer.innerHTML = data.Answer;
+					infos.appendChild(answer);
+					if(answer.querySelector("style")) {
+						answer.querySelector("style").remove();
+					}
+					if(answer.querySelector("script")) {
+						answer.querySelector("script").remove();
+					}
+					answer.innerHTML = answer.textContent;
+				break;
+				case "N":
+					return;
 				break;
 				default:
 					return;
@@ -251,5 +255,4 @@ function InfoCard(options) {
 		_.container.innerHTML = "";
 	}
 	this.createCard();
-
 }
