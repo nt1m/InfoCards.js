@@ -4,16 +4,13 @@ function InfoCard(options) {
 		throw new SyntaxError("[InfoCard] Missing query parameter");
 		return;
 	}
-	else {
-		this.query = options.query;
-	}
 	if(!options.container) {
 		throw new SyntaxError("[InfoCard] Missing container parameter");
 		return;
 	}
-	else {
-		this.container = options.container;
-	}
+	this.query = options.query;
+	this.container = options.container;
+	this.options = options;
 	this.apiURL = "http://api.duckduckgo.com/?q=" + encodeURIComponent(this.query) + "&format=json";
 	this.getJSONData = function(callback, error) {
 		var url = this.apiURL;
@@ -38,15 +35,25 @@ function InfoCard(options) {
 			options.onEmpty(_.container);
 		}
 	}
+	this.applyDomOptions = function(name, element) {
+		if(!options.hasOwnProperty("classNames")) {
+			return;
+		}
+		if(options.classNames.hasOwnProperty(name)) {
+			element.classList.add(options.className[name]);
+		}
+	}
 	this.parseTopic = function(data, container) {
 		if(data.hasOwnProperty("Topics")) {
 			return;
 		}
 		var item = document.createElement("li");
+		_.applyDomOptions("category-item", item);
 		container.appendChild(item);
+
 		var title = document.createElement("h2");
 		title.innerHTML = decodeURIComponent(data.FirstURL.replace("https://duckduckgo.com/","")
-											.replace(/_/g," "));
+		                                                  .replace(/_/g," "));
 		item.appendChild(title);
 		if(data.hasOwnProperty("Icon") && data.Icon.URL != "") {
 			var image = document.createElement("img");
@@ -71,6 +78,8 @@ function InfoCard(options) {
 			_.card = document.createElement("div");
 			_.container.appendChild(_.card);
 			_.card.classList.add("InfoCard-card");
+			_.applyDomOptions("card", _.card);
+
 			var infos = document.createElement("div");
 			infos.classList.add("InfoCard-text");
 			_.card.appendChild(infos);
@@ -150,6 +159,8 @@ function InfoCard(options) {
 					_.hasTabs = true;
 					var tabs = document.createElement("ul");
 					tabs.classList.add("InfoCard-tabs");
+					_.applyDomOptions("tabs", tabs);
+
 					infos.appendChild(tabs);
 
 					var toptab = document.createElement("li");
@@ -213,9 +224,11 @@ function InfoCard(options) {
 					answer.innerHTML = answer.textContent;
 				break;
 				case "N":
+					options.onError(1);
 					return;
 				break;
 				default:
+					options.onError(1);
 					return;
 				break;
 			}
@@ -223,8 +236,10 @@ function InfoCard(options) {
 				_.initTabs();
 			}
 			if(options.onLoad) {
-				options.onLoad().bind(_.card);
+				options.onLoad(_.card);
 			}
+		}, function() {
+			options.onError(0)
 		});
 	}
 	this.initTabs = function() {
