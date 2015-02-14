@@ -16,6 +16,31 @@
     <p>The query you wish to get information about. <b>Required</b></p>
     <h4>container</h4>
     <p>The DOM element where you wish to insert the info card. <b>Required</b></p>
+    <h4>classNames</h4>
+    <p>Class names you wish to apply to differents DOM elements.</p>
+    <p>Supported values :</p>
+    <ul>
+        <li><b>category-item</b></li>
+        <li>card</li>
+        <li>tabs</li>
+    </ul>
+    <p>Usage :</p>
+<pre>
+classNames: {
+    category-item: "card",
+    tabs: "tabs"
+}
+</pre>
+    <h4>onEmpty(container)</h4>
+    <p>Function called when no results are found.</p>
+    
+    <h4>onError(errorCode)</h4>
+    <p>Function called when an error occurs.</p>
+    <h5>errorCode</h5>
+    <ul>
+        <li><b>0</b>: 404 error</li>
+        <li><b>1</b>: Unimplemented</li>
+    </ul>
     <h2>Example</h2>
     <p>
         <input type="text" placeholder="Find information about..." id="demo-input"></input>
