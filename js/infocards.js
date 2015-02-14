@@ -40,7 +40,7 @@ function InfoCard(options) {
 			return;
 		}
 		if(options.classNames.hasOwnProperty(name)) {
-			element.classList.add(options.className[name]);
+			element.classList.add(options.classNames[name]);
 		}
 	}
 	this.parseTopic = function(data, container) {
