@@ -207,6 +207,7 @@ function InfoCard(options) {
 						return;
 					}
 					var categorycard = document.createElement("ul");
+					categorycard.className = "InfoCard-category";
 					infos.appendChild(categorycard);
 					data.RelatedTopics.forEach(function(value) {
 						_.parseTopic(value, categorycard);	
