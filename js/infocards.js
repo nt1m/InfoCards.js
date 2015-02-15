@@ -1,3 +1,5 @@
+/********** Infocards.js by Tim Nguyen ***********/
+/****** http://github.com/nt1m/InfoCards.js ******/
 function InfoCard(options) {
 	var _ = this;
 	if(!options || !options.query) {
