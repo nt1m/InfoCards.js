@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>InfoCards.js</title>
+    <meta charset="utf-8">
     <link rel="stylesheet" href="css/infocards.css"/>
     <script src="js/infocards.js"></script>
 </head>
@@ -31,6 +32,14 @@ classNames: {
     tabs: "tabs"
 }
 </pre>
+    <h4>horizontalScrolling</h4>
+    <p>Enables horizontal scrolling support using the mousewheel for some elements.</p>
+    <p>Supported values :</p>
+    <ul>
+        <li><b>false</b> (default) : Disables horizontal scrolling</li>
+        <li><b>true</b> : Enables horizontal scrolling</li>
+        <li><b>"string"</b> : Enables horizontal scrolling for selectors specified inside the string</li>
+    </ul>
     <h4>onEmpty(container)</h4>
     <p>Function called when no results are found.</p>
     
@@ -49,15 +58,16 @@ classNames: {
     <pre><script style="display:block;">
 window.onload = function() {
     var infocard = null;
-    document.querySelector("#demo-input").addEventListener("change",function() {
+    document.querySelector("#demo-input").addEventListener("change", function() {
         if(infocard != null) {
             infocard.destroy();
         }
         infocard = new InfoCard({
             query: this.value,
             container: document.querySelector("#demo-result"),
+            horizontalScrolling: ".InfoCard-category",
             onEmpty: function(container) {
-                container.innerHTML="No results found."
+                container.innerHTML = "No results found."
             }
         });
     }, false);

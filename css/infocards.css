@@ -23,6 +23,29 @@
 .InfoCard-image-container {
 	float: left;
 }
+.InfoCard-color-display {
+	width: 100px;
+	height: 100px;
+	display: inline-block;
+	border-radius: 2px;
+	float: left;
+	position: relative;
+}
+.InfoCard-color-display::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	background-color: #eee;
+	background-image: linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc),
+    		          linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc);
+	background-size: 20px 20px;
+	background-position: 0 0, 10px 10px;
+	z-index: -1;
+}
+.InfoCard-color-display,
 .InfoCard-image {
 	margin-right: 10px;
 	max-width: 250px;

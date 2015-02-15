@@ -69,11 +69,26 @@ function InfoCard(options) {
 		var unwantedlink = description.querySelector("a");
 		description.removeChild(unwantedlink);
 	}
+	this.matchesSelector = function(element, selector) {
+		var matches = element.matches || element.webkitMatchesSelector || element.mozMatchesSelector || element.msMatchesSelector;
+		return matches.call(element, selector);
+	}
+	this.enableHorizontalScrolling = function(element) {
+		if(!options.horizontalScrolling || 
+		  ((typeof options.horizontalScrolling == "string") && 
+		   !this.matchesSelector(element, options.horizontalScrolling))) {
+			return;
+		}
+		element.addEventListener("wheel", function(event) {
+			element.scrollLeft += (event.deltaY * 5);
+			event.preventDefault();
+		});
+	}
 	this.createCard = function() {
 		_.getJSONData(function(data) {
 			_.container.classList.add("InfoCard-container");
 
-			if(data.Heading == "" || data.Type == "") {
+			if(data.Type !== "E" && (data.Heading == "" || data.Type == "")) {
 				_.onEmptyCallback();
 				return;
 			}
@@ -103,7 +118,7 @@ function InfoCard(options) {
 						image.src = data.Image;
 						image.style.width = data.ImageWidth;
 						image.style.height = data.ImageHeight;
-						imagecont.appendChild(image)
+						imagecont.appendChild(image);
 					}
 					if(data.Entity) {
 						var entity = document.createElement("p");
@@ -113,7 +128,7 @@ function InfoCard(options) {
 					}
 					var description = document.createElement("p");
 					description.innerHTML = data.Abstract;
-					description.classList.add("InfoCard-description")
+					description.classList.add("InfoCard-description");
 					infos.appendChild(description);
 
 					if(data.hasOwnProperty("Results") && data.Results.length > 0) {
@@ -162,8 +177,8 @@ function InfoCard(options) {
 					var tabs = document.createElement("ul");
 					tabs.classList.add("InfoCard-tabs");
 					_.applyDomOptions("tabs", tabs);
-
 					infos.appendChild(tabs);
+					_.enableHorizontalScrolling(tabs);
 
 					var toptab = document.createElement("li");
 					toptab.innerHTML = "Top";
@@ -174,6 +189,7 @@ function InfoCard(options) {
 					categorycard.className = "InfoCard-category InfoCard-tab-content";
 					categorycard.dataset.id = "top";
 					infos.appendChild(categorycard);
+					_.enableHorizontalScrolling(categorycard);
 
 					data.RelatedTopics.forEach(function(value) {
 						if(value.hasOwnProperty("Topics")) {
@@ -190,6 +206,7 @@ function InfoCard(options) {
 							tabcontent.className = "InfoCard-category InfoCard-tab-content";
 							tabcontent.dataset.id = value.Name;
 							infos.appendChild(tabcontent);
+							_.enableHorizontalScrolling(tabcontent);
 
 							value.Topics.forEach(function(val) {
 								_.parseTopic(val, tabcontent)
@@ -211,6 +228,7 @@ function InfoCard(options) {
 					var categorycard = document.createElement("ul");
 					categorycard.className = "InfoCard-category";
 					infos.appendChild(categorycard);
+					_.enableHorizontalScrolling(categorycard);
 					data.RelatedTopics.forEach(function(value) {
 						_.parseTopic(value, categorycard);	
 					});
@@ -223,13 +241,23 @@ function InfoCard(options) {
 					var answer = document.createElement("p");
 					answer.innerHTML = data.Answer;
 					infos.appendChild(answer);
-					if(answer.querySelector("style")) {
-						answer.querySelector("style").remove();
+					switch(data.AnswerType) {
+						case "calc":
+							if(answer.querySelector("style")) {
+								answer.querySelector("style").remove();
+							}
+							if(answer.querySelector("script")) {
+								answer.querySelector("script").remove();
+							}
+							answer.innerHTML = answer.textContent;
+						break;
+						case "color_code":
+							answer.querySelector(".colorcodesbox").className = "InfoCard-color-display";
+							answer.querySelector("br").remove();
+							answer.innerHTML = answer.innerHTML.replace(/hsl\(/g, " · hsl(");
+							answer.innerHTML = answer.innerHTML.replace(/ \· /g, "<br/>").replace("] [", " · ").replace("]", "").replace("[", "");
+						break;
 					}
-					if(answer.querySelector("script")) {
-						answer.querySelector("script").remove();
-					}
-					answer.innerHTML = answer.textContent;
 				break;
 				case "N":
 					options.onError(1);
