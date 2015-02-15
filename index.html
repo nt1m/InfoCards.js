@@ -32,6 +32,8 @@ classNames: {
     tabs: "tabs"
 }
 </pre>
+    <h4>appReferName</h4>
+    <p>App name to append behind API URL for DuckDuckGo's purpose.</p>
     <h4>horizontalScrolling</h4>
     <p>Enables horizontal scrolling support using the mousewheel for some elements.</p>
     <p>Supported values :</p>
@@ -40,6 +42,8 @@ classNames: {
         <li><b>true</b> : Enables horizontal scrolling</li>
         <li><b>"string"</b> : Enables horizontal scrolling for selectors specified inside the string</li>
     </ul>
+    <h4>onHeadingClick</h4>
+    <p>Function to call when a heading (title or topic title) is clicked.</p>
     <h4>onEmpty(container)</h4>
     <p>Function called when no results are found.</p>
     
@@ -66,6 +70,7 @@ window.onload = function() {
             query: this.value,
             container: document.querySelector("#demo-result"),
             horizontalScrolling: ".InfoCard-category",
+            appReferName: "infocardjs-demo",
             onEmpty: function(container) {
                 container.innerHTML = "No results found."
             }

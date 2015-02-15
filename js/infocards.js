@@ -10,10 +10,13 @@ function InfoCard(options) {
 		throw new SyntaxError("[InfoCard] Missing container parameter");
 		return;
 	}
-	this.query = options.query;
 	this.container = options.container;
 	this.options = options;
+	this.query = options.query;
 	this.apiURL = "http://api.duckduckgo.com/?q=" + encodeURIComponent(this.query) + "&format=json";
+	if(options.appReferName) {
+		this.apiURL += "&t=" + options.appReferName;
+	}
 	this.getJSONData = function(callback, error) {
 		var url = this.apiURL;
 		var callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
@@ -57,6 +60,9 @@ function InfoCard(options) {
 		title.innerHTML = decodeURIComponent(data.FirstURL.replace("https://duckduckgo.com/","")
 		                                                  .replace(/_/g," "));
 		item.appendChild(title);
+		if(options.onHeadingClick) {
+			title.onclick = options.onHeadingClick;
+		}
 		if(data.hasOwnProperty("Icon") && data.Icon.URL != "") {
 			var image = document.createElement("img");
 			image.src = data.Icon.URL;
@@ -100,10 +106,14 @@ function InfoCard(options) {
 			var infos = document.createElement("div");
 			infos.classList.add("InfoCard-text");
 			_.card.appendChild(infos);
+
 			var header = document.createElement("h1");
 			infos.appendChild(header);
 			header.classList.add("InfoCard-title");
 			header.innerHTML = data.Heading;
+			if(options.onHeadingClick) {
+				header.onclick = options.onHeadingClick;
+			}
 
 			_.card.classList.add("InfoCard-type-"+data.Type.toLowerCase());
 
@@ -267,6 +277,14 @@ function InfoCard(options) {
 					options.onError(1);
 					return;
 				break;
+			}
+			var creditlink = document.createElement("a");
+			creditlink.className = "InfoCard-credit-link";
+			creditlink.innerHTML = "Results by DuckDuckGo";
+			creditlink.href = "http://duckduckgo.com/?q=" + encodeURIComponent(_.query);
+			_.card.appendChild(creditlink);
+			if(options.appReferName) {
+				creditlink.href += "&t=" + options.appReferName;
 			}
 			if(_.hasTabs) {
 				_.initTabs();

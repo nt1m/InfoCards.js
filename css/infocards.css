@@ -130,3 +130,14 @@
 	white-space: normal;
 	text-align: justify;
 }
+
+/* InfoCard credit link */
+.InfoCard-credit-link::before {
+	content: "";
+	width: 2em;
+	height: 1.4em;
+	vertical-align: middle;
+	display: inline-block;
+	background-image: url("ddg_logo.svg");
+	background-size: 2em;
+}
