@@ -206,6 +206,11 @@ function InfoCard(options) {
 						_.onEmptyCallback();
 						return;
 					}
+					var categorycard = document.createElement("ul");
+					infos.appendChild(categorycard);
+					data.RelatedTopics.forEach(function(value) {
+						_.parseTopic(value, categorycard);	
+					});
 				break;
 				case "E":
 					if(data.Answer == "") {
