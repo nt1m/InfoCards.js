@@ -13,7 +13,7 @@ function InfoCard(options) {
 	this.container = options.container;
 	this.options = options;
 	this.query = options.query;
-	this.apiURL = "http://api.duckduckgo.com/?q=" + encodeURIComponent(this.query) + "&format=json";
+	this.apiURL = (options.hasOwnProperty("protocol") ? options.protocol : "http") + "://api.duckduckgo.com/?q=" + encodeURIComponent(this.query) + "&format=json";
 	if(options.appReferName) {
 		this.apiURL += "&t=" + options.appReferName;
 	}
@@ -251,6 +251,8 @@ function InfoCard(options) {
 					var answer = document.createElement("p");
 					answer.innerHTML = data.Answer;
 					infos.appendChild(answer);
+					answer.dataset.type = data.AnswerType;
+					answer.className = "InfoCard-exclusive-answer";
 					switch(data.AnswerType) {
 						case "calc":
 							if(answer.querySelector("style")) {
