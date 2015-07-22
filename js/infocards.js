@@ -110,7 +110,7 @@ function InfoCard(options) {
 			var header = document.createElement("h1");
 			infos.appendChild(header);
 			header.classList.add("InfoCard-title");
-			header.innerHTML = data.Heading;
+			header.textContent = data.Heading;
 			if(options.onHeadingClick) {
 				header.onclick = options.onHeadingClick;
 			}
@@ -249,27 +249,62 @@ function InfoCard(options) {
 						return;
 					}
 					var answer = document.createElement("p");
-					answer.innerHTML = data.Answer;
-					infos.appendChild(answer);
-					answer.dataset.type = data.AnswerType;
-					answer.className = "InfoCard-exclusive-answer";
+					if (typeof data.Answer == "string") {
+						answer.innerHTML = data.Answer;
+						infos.appendChild(answer);
+						answer.dataset.type = data.AnswerType;
+						answer.className = "InfoCard-exclusive-answer";
+					}
+					else {
+						header.textContent = data.Answer.data.title;
+
+						var entity = document.createElement("p");
+						entity.classList.add("InfoCard-entity");
+						entity.innerHTML = data.Answer.data.subtitle;
+						infos.appendChild(entity);
+
+						var description = document.createElement("p");
+						description.innerHTML = data.Answer.data.description;
+						description.classList.add("InfoCard-description");
+						infos.appendChild(description);
+						if (data.Answer.data.image) {
+							var img = document.createElement("img");
+							img.src = data.Answer.data.image;
+							img.className = "InfoCard-image";
+							_.card.insertBefore(img, infos);
+						}
+						if (data.Answer.meta) {
+							var links = document.createElement("div");
+							links.classList.add("InfoCard-links");
+							infos.appendChild(links);
+
+							var sourcelink = document.createElement("a");
+							sourcelink.href = data.Answer.meta.sourceUrl;
+							sourcelink.textContent = data.Answer.meta.sourceName;
+							links.appendChild(sourcelink);
+						}
+					}
 					switch(data.AnswerType) {
 						case "calc":
-							if(answer.querySelector("style")) {
-								answer.querySelector("style").remove();
-							}
-							if(answer.querySelector("script")) {
-								answer.querySelector("script").remove();
-							}
-							answer.innerHTML = answer.textContent;
+							header.textContent = this.query;
+							var invisibleEl = document.createElement("p");
+							invisibleEl.innerHTML = data.Answer;
+							answer.textContent = invisibleEl.textContent;
 						break;
 						case "color_code":
 							answer.querySelector(".colorcodesbox").className = "InfoCard-color-display";
-							answer.querySelector("br").remove();
 							answer.innerHTML = answer.innerHTML.replace(/hsl\(/g, " · hsl(");
 							answer.innerHTML = answer.innerHTML.replace(/ \· /g, "<br/>").replace("] [", " · ").replace("]", "").replace("[", "");
+							answer.querySelector(".column1").className = "InfoCard-column";
+							answer.querySelector(".column2").className = "InfoCard-column";
+						break;
+						default:
+							var invisibleEl = document.createElement("p");
+							invisibleEl.innerHTML = data.Answer;
+							answer.textContent = invisibleEl.textContent;
 						break;
 					}
+
 				break;
 				case "N":
 					options.onError(1);

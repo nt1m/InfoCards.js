@@ -19,6 +19,7 @@
 }
 .InfoCard-title {
 	font-size: 1.5em;
+	margin-top: 0;
 }
 .InfoCard-image-container {
 	float: left;
@@ -49,7 +50,16 @@
 .InfoCard-image {
 	margin-right: 10px;
 	max-width: 250px;
-	vertical-align: middle;
+	vertical-align: top;
+	float: left;
+}
+.InfoCard-column {
+	float: left;
+	vertical-align: top;
+	margin-right: 50px;
+}
+.InfoCard-column :first-child {
+	margin-top: 0;
 }
 .InfoCard-list {
 	float: right;
