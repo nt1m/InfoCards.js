@@ -286,7 +286,7 @@ function InfoCard(options) {
 					}
 					switch(data.AnswerType) {
 						case "calc":
-							header.textContent = this.query;
+							header.textContent = options.query;
 							var invisibleEl = document.createElement("p");
 							invisibleEl.innerHTML = data.Answer;
 							answer.textContent = invisibleEl.textContent;
